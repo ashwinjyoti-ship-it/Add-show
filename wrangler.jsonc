@@ -1,0 +1,19 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "add-show",
+  "compatibility_date": "2026-01-27",
+  "pages_build_output_dir": "./dist",
+  "compatibility_flags": ["nodejs_compat"],
+  "d1_databases": [
+    {
+      "binding": "DB_SOUND",
+      "database_name": "ncpa-sound-crew-db",
+      "database_id": "8dd5bac9-26b7-45d7-94b3-7a013ec3e880"
+    },
+    {
+      "binding": "DB_CREW",
+      "database_name": "ncpa-crew-db",
+      "database_id": "3bc26aff-d41b-4d7b-bb68-7b768d02dabf"
+    }
+  ]
+}
