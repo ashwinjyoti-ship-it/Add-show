@@ -35,7 +35,30 @@ jobs:
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
 
       - name: Deploy to Cloudflare Pages
-        run: npx wrangler pages deploy dist --project-name=add-show
+        id: deploy
+        run: |
+          set -o pipefail
+          npx wrangler pages deploy dist --project-name=add-show 2>&1 | tee deploy.log
+          URL=$(grep -oE 'https://[a-z0-9]+\.add-show\.pages\.dev' deploy.log | head -1)
+          if [ -z "$URL" ]; then
+            echo "::error::Could not parse preview URL from wrangler output"
+            exit 1
+          fi
+          echo "url=$URL" >> "$GITHUB_OUTPUT"
+          echo "production_url=https://add-show.pages.dev" >> "$GITHUB_OUTPUT"
+          {
+            echo "## 🚀 Cloudflare Pages Deployment"
+            echo ""
+            echo "| | URL |"
+            echo "|---|---|"
+            echo "| **Preview** | [$URL]($URL) |"
+            echo "| **Production** | [https://add-show.pages.dev](https://add-show.pages.dev) |"
+          } >> "$GITHUB_STEP_SUMMARY"
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+
+      - name: Print deployment URLs
+        run: |
+          echo "Preview URL:    ${{ steps.deploy.outputs.url }}"
+          echo "Production URL: ${{ steps.deploy.outputs.production_url }}"
