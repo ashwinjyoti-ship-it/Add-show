@@ -4,7 +4,7 @@ on:
   push:
     branches:
       - main
-      - claude/cloudflare-show-manager-app-HZXY3
+      - 'claude/**'
   pull_request:
     branches: [main]
 
@@ -33,4 +33,4 @@ jobs:
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          command: pages deploy dist --project-name=add-show
+          command: pages deploy dist --project-name=add-show --branch=main
